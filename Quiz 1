@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SSC CGL Quiz - Black Book OWS (Letter P)</title>
+<style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    body { background-color: #f4f6f9; color: #333; padding: 20px; }
+    .container { max-width: 900px; margin: 0 auto; background: #fff; padding: 25px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+    .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #eee; padding-bottom: 15px; margin-bottom: 20px; }
+    .timer { font-size: 1.2rem; font-weight: bold; background: #27ae60; color: #fff; padding: 8px 15px; border-radius: 5px; }
+    .palette-container { margin-bottom: 25px; }
+    .palette-title { font-size: 0.9rem; font-weight: bold; margin-bottom: 8px; color: #666; }
+    .palette { display: flex; flex-wrap: wrap; gap: 6px; padding: 10px; background: #f8f9fa; border-radius: 8px; max-height: 140px; overflow-y: auto; border: 1px solid #e2e8f0; }
+    .nav-btn { width: 34px; height: 34px; border: 1px solid #ccc; background: #fff; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 0.85rem; }
+    .nav-btn.active { border: 2px solid #2980b9; background: #ebf5fb; color: #2980b9; }
+    .nav-btn.answered { background: #2ecc71; color: #fff; border-color: #27ae60; }
+    .question-box { display: none; }
+    .question-box.active { display: block; }
+    .q-text { font-size: 1.1rem; font-weight: 600; margin-bottom: 15px; line-height: 1.5; }
+    .options { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+    .option-label { display: flex; align-items: center; padding: 12px 15px; border: 1px solid #ddd; border-radius: 6px; cursor: pointer; transition: 0.2s; }
+    .option-label:hover { background: #f0f4f8; }
+    .option-label input { margin-right: 12px; }
+    .controls { display: flex; justify-content: space-between; margin-top: 20px; border-top: 1px solid #eee; padding-top: 15px; }
+    .btn { padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
+    .btn-primary { background: #3498db; color: #fff; }
+    .btn-success { background: #2ecc71; color: #fff; }
+    .btn:disabled { background: #ccc; cursor: not-allowed; }
+    #result-screen { display: none; text-align: center; padding: 20px; }
+    .score-card { font-size: 1.2rem; margin: 20px 0; line-height: 2; text-align: left; background: #f8f9fa; padding: 20px; border-radius: 8px; }
+    .summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+</style>
+</head>
+<body>
+
+<div class="container" id="quiz-screen">
+    <div class="header">
+        <h2>SSC CGL: Black Book OWS (Letter P)</h2>
+        <div class="timer" id="timer">Time Taken: 00:00</div>
+    </div>
+
+    <div class="palette-container">
+        <div class="palette-title">Question Navigation (Click to Jump):</div>
+        <div class="palette" id="palette"></div>
+    </div>
+
+    <div id="questions-container"></div>
+
+    <div class="controls">
+        <button class="btn btn-primary" id="prev-btn" onclick="changeQuestion(-1)">Previous</button>
+        <button class="btn btn-primary" id="next-btn" onclick="changeQuestion(1)">Next</button>
+        <button class="btn btn-success" onclick="submitQuiz()">Submit Test</button>
+    </div>
+</div>
+
+<div class="container" id="result-screen">
+    <h2>Performance Summary</h2>
+    <div class="score-card">
+        <div class="summary-grid">
+            <p>Total Questions: <b>50</b></p>
+            <p>Attempted: <b id="res-attempted">0</b></p>
+            <p>Correct Answers: <b id="res-correct" style="color:green;">0</b></p>
+            <p>Wrong Answers: <b id="res-wrong" style="color:red;">0</b></p>
+            <p>Time Taken: <b id="res-time" style="color:#e67e22;">00:00</b></p>
+        </div>
+        <hr style="margin: 15px 0;">
+        <p style="font-size: 1.6rem; text-align: center;">Final Score: <b id="res-score" style="color:#2980b9;">0</b> / 100</p>
+    </div>
+    <button class="btn btn-primary" onclick="location.reload()">Re-test</button>
+</div>
+
+<script>
+const quizData = [
+  { q: "The crime of killing one's father, mother, or close relative", options: ["Parricide", "Parvenu", "Patrimony", "Patriarchy"], ans: 0 },
+  { q: "One who has suddenly become rich but lacks social grace", options: ["Pauper", "Pedant", "Parvenu", "Patriot"], ans: 2 },
+  { q: "The sole right to make and sell an invention", options: ["Patrimony", "Patent", "Penalty", "Perquisite"], ans: 1 },
+  { q: "The scientific study of diseases", options: ["Pediatrics", "Physiology", "Pathology", "Philology"], ans: 2 },
+  { q: "A system of society or government in which men hold power", options: ["Patriarchy", "Patrilineal", "Parricide", "Patrimony"], ans: 0 },
+  { q: "The killing of one's own father", options: ["Parricide", "Patricide", "Patrimony", "Persecute"], ans: 1 },
+  { q: "Relating to inheritance or descent through the male line", options: ["Patrimony", "Patrilineal", "Patriarchy", "Patriot"], ans: 1 },
+  { q: "Property that is given to somebody when his father dies", options: ["Patrimony", "Parvenu", "Perquisite", "Patent"], ans: 0 },
+  { q: "A person who loves, supports and defends his country", options: ["Pioneer", "Pedestrian", "Patriot", "Philistine"], ans: 2 },
+  { q: "To go around an area to keep a watch", options: ["Patrol", "Pilfer", "Persecute", "Placate"], ans: 0 },
+  { q: "One who has no money or means of livelihood", options: ["Parvenu", "Pauper", "Pedant", "Philistine"], ans: 1 },
+  { q: "Concerning or consisting of money", options: ["Pecuniary", "Perfunctory", "Perpetual", "Pensive"], ans: 0 },
+  { q: "The method and practice of teaching", options: ["Pedantry", "Pedagogy", "Pediatrics", "Phonetics"], ans: 1 },
+  { q: "A person who is excessively concerned with minor details or formal rules", options: ["Pedant", "Pessimist", "Placid", "Pioneer"], ans: 0 },
+  { q: "Excessively concerned with minor details or formalisms", options: ["Perfunctory", "Pedantic", "Pensive", "Pivotal"], ans: 1 },
+  { q: "A person who walks on foot rather than travelling in a vehicle", options: ["Pedestrian", "Pioneer", "Pilgrim", "Patrol"], ans: 0 },
+  { q: "A doctor who treats children", options: ["Pathologist", "Pediatrician", "Physician", "Physiotherapist"], ans: 1 },
+  { q: "The branch of medicine concerned with children and their illnesses", options: ["Pedagogy", "Pediatrics", "Phonetics", "Pathology"], ans: 1 },
+  { q: "A punishment imposed for breaking a law, rule, or contract", options: ["Penalty", "Perfidy", "Penance", "Penury"], ans: 0 },
+  { q: "A special fondness or liking for something", options: ["Penchant", "Pendant", "Peril", "Penance"], ans: 0 },
+  { q: "A small ornament which hangs down especially from a necklace", options: ["Pendant", "Penchant", "Perks", "Pew"], ans: 0 },
+  { q: "To move into or through something", options: ["Penetrate", "Persecute", "Placate", "Pilfer"], ans: 0 },
+  { q: "A large mass of land projecting into a body of water", options: ["Peninsula", "Pergola", "Pigsty", "Pillion"], ans: 0 },
+  { q: "The state of feeling sorry for wrongdoing", options: ["Penance", "Penitence", "Perfidy", "Penury"], ans: 1 },
+  { q: "Deep in thought", options: ["Perplexed", "Pensive", "Placid", "Pivotal"], ans: 1 },
+  { q: "One who quickly understands and responds to situations", options: ["Perceptive", "Perfunctory", "Pedantic", "Pessimist"], ans: 0 },
+  { q: "Lasting for an indefinitely long time", options: ["Perennial", "Perfunctory", "Pensive", "Pivotal"], ans: 0 },
+  { q: "A deliberate breach of faith or betrayal of trust", options: ["Perfidy", "Penance", "Peril", "Penalty"], ans: 0 },
+  { q: "Done as a routine but without interest", options: ["Perennial", "Perpetual", "Perfunctory", "Perplexed"], ans: 2 },
+  { q: "A structure in the garden where climbing plants can grow", options: ["Pergola", "Pew", "Pigsty", "Plaza"], ans: 0 },
+  { q: "Continuing for a long period of time without interruption; lasting forever", options: ["Perpetual", "Perfunctory", "Pecuniary", "Pensive"], ans: 0 },
+  { q: "Confused or puzzled", options: ["Perplexed", "Pensive", "Placid", "Pivotal"], ans: 0 },
+  { q: "An additional benefit or privilege given to an employee beyond salary", options: ["Perquisite", "Patrimony", "Penalty", "Pension"], ans: 0 },
+  { q: "To subject someone to hostility or ill-treatment", options: ["Persecute", "Placate", "Pilfer", "Patrol"], ans: 0 },
+  { q: "Constant effort to achieve something", options: ["Perseverance", "Perusal", "Penance", "Persuasion"], ans: 0 },
+  { q: "The people employed in an organization or engaged in a service", options: ["Personnel", "Personal", "Paupers", "Pedestrians"], ans: 0 },
+  { q: "Careful reading or examination", options: ["Perusal", "Perseverance", "Penance", "Perfidy"], ans: 0 },
+  { q: "A person who tends to see the worst aspect of situations", options: ["Pessimist", "Pioneer", "Philanderer", "Parvenu"], ans: 0 },
+  { q: "A substance used for killing pests", options: ["Pesticide", "Pestiferous", "Placebo", "Pestle"], ans: 0 },
+  { q: "Morally harmful or spreading evil influence", options: ["Pestiferous", "Pesticide", "Placid", "Perfidy"], ans: 0 },
+  { q: "A stick with a thick end used in a mortar for pounding", options: ["Pestle", "Pew", "Pillion", "Pile"], ans: 0 },
+  { q: "A long wooden seat with a back for people to sit on in a church", options: ["Pew", "Pergola", "Plaza", "Podium"], ans: 0 },
+  { q: "A place where you can buy medicines", options: ["Pharmacy", "Pantry", "Physiology", "Pedagogy"], ans: 0 },
+  { q: "An observable fact or event", options: ["Phenomenon", "Phobia", "Philology", "Phonetics"], ans: 0 },
+  { q: "A person who always runs after women", options: ["Philanderer", "Philanthropist", "Philistine", "Philogynist"], ans: 0 },
+  { q: "One who loves mankind and donates money and time to help others", options: ["Philanthropist", "Philatelist", "Philistine", "Philosopher"], ans: 0 },
+  { q: "Love for mankind shown by donating money and time", options: ["Philanthropy", "Philology", "Philosophy", "Philately"], ans: 0 },
+  { q: "A person who collects or studies stamps", options: ["Philatelist", "Philanthropist", "Philistine", "Philologist"], ans: 0 },
+  { q: "The collection and study of postage stamps", options: ["Philately", "Philology", "Phonetics", "Pedagogy"], ans: 0 },
+  { q: "A person who lacks interest in art, culture, or refined ideas", options: ["Philistine", "Pedant", "Philanderer", "Pessimist"], ans: 0 }
+];
+
+let currentQ = 0;
+let userAnswers = new Array(quizData.length).fill(null);
+let secondsElapsed = 0;
+let timerInterval = null;
+
+function initQuiz() {
+    const qContainer = document.getElementById('questions-container');
+    const palette = document.getElementById('palette');
+
+    quizData.forEach((q, index) => {
+        const navBtn = document.createElement('button');
+        navBtn.className = `nav-btn ${index === 0 ? 'active' : ''}`;
+        navBtn.id = `nav-${index}`;
+        navBtn.innerText = index + 1;
+        navBtn.onclick = () => jumpToQuestion(index);
+        palette.appendChild(navBtn);
+
+        const qBox = document.createElement('div');
+        qBox.className = `question-box ${index === 0 ? 'active' : ''}`;
+        qBox.id = `qbox-${index}`;
+
+        let optionsHTML = '';
+        q.options.forEach((opt, optIdx) => {
+            optionsHTML += `
+                <label class="option-label">
+                    <input type="radio" name="q_${index}" value="${optIdx}" onchange="selectOption(${index}, ${optIdx})">
+                    (${String.fromCharCode(97 + optIdx)}) ${opt}
+                </label>
+            `;
+        });
+
+        qBox.innerHTML = `
+            <div class="q-text">Q${index + 1}. ${q.q}</div>
+            <div class="options">${optionsHTML}</div>
+        `;
+        qContainer.appendChild(qBox);
+    });
+
+    startStopwatch();
+    updateControls();
+}
+
+function selectOption(qIdx, optIdx) {
+    userAnswers[qIdx] = optIdx;
+    document.getElementById(`nav-${qIdx}`).classList.add('answered');
+}
+
+function jumpToQuestion(index) {
+    document.getElementById(`qbox-${currentQ}`).classList.remove('active');
+    document.getElementById(`nav-${currentQ}`).classList.remove('active');
+    
+    currentQ = index;
+    
+    document.getElementById(`qbox-${currentQ}`).classList.add('active');
+    document.getElementById(`nav-${currentQ}`).classList.add('active');
+    updateControls();
+}
+
+function changeQuestion(dir) {
+    if (currentQ + dir >= 0 && currentQ + dir < quizData.length) {
+        jumpToQuestion(currentQ + dir);
+    }
+}
+
+function updateControls() {
+    document.getElementById('prev-btn').disabled = currentQ === 0;
+    document.getElementById('next-btn').disabled = currentQ === quizData.length - 1;
+}
+
+function startStopwatch() {
+    const timerElem = document.getElementById('timer');
+    timerInterval = setInterval(() => {
+        secondsElapsed++;
+        let mins = Math.floor(secondsElapsed / 60);
+        let secs = secondsElapsed % 60;
+        timerElem.innerText = `Time Taken: ${mins < 10 ? '0' : ''}${mins}:${secs < 10 ? '0' : ''}${secs}`;
+    }, 1000);
+}
+
+function submitQuiz() {
+    clearInterval(timerInterval);
+
+    let correct = 0;
+    let wrong = 0;
+    let attempted = 0;
+
+    userAnswers.forEach((ans, idx) => {
+        if (ans !== null) {
+            attempted++;
+            if (ans === quizData[idx].ans) {
+                correct++;
+            } else {
+                wrong++;
+            }
+        }
+    });
+
+    let score = (correct * 2) - (wrong * 0.50);
+    let mins = Math.floor(secondsElapsed / 60);
+    let secs = secondsElapsed % 60;
+    let timeFormatted = `${mins < 10 ? '0' : ''}${mins}:${secs < 10 ? '0' : ''}${secs}`;
+
+    document.getElementById('quiz-screen').style.display = 'none';
+    document.getElementById('result-screen').style.display = 'block';
+
+    document.getElementById('res-attempted').innerText = attempted;
+    document.getElementById('res-correct').innerText = correct;
+    document.getElementById('res-wrong').innerText = wrong;
+    document.getElementById('res-time').innerText = timeFormatted;
+    document.getElementById('res-score').innerText = score.toFixed(2);
+}
+
+window.onload = initQuiz;
+</script>
+</body>
+</html>
