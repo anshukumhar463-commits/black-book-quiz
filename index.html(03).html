@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>One Word Substitution Quiz — Q.1620 to 1669</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600;700&family=Space+Grotesk:wght@500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#EEF0F2;
+    --paper:#FFFFFF;
+    --ink:#101B33;
+    --ink-soft:#3C4A63;
+    --line:#D7DBE0;
+    --gold:#C8891A;
+    --gold-soft:#F4E4C2;
+    --green:#1F7A4D;
+    --green-soft:#E1F1E8;
+    --red:#B3261E;
+    --red-soft:#FBE7E5;
+    --grey-dot:#B7BEC8;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Source Serif 4', Georgia, serif;
+    display:flex;
+    justify-content:center;
+    -webkit-tap-highlight-color:transparent;
+  }
+  #app{
+    width:100%;
+    max-width:480px;
+    min-height:100vh;
+    background:var(--paper);
+    box-shadow:0 0 0 1px var(--line);
+    display:flex;
+    flex-direction:column;
+  }
+
+  /* ---- Header ---- */
+  header{
+    padding:14px 16px 10px;
+    border-bottom:2px solid var(--ink);
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+  }
+  .exam-title{
+    font-family:'Space Grotesk',sans-serif;
+    font-weight:600;
+    font-size:13px;
+    letter-spacing:.2px;
+    color:var(--ink-soft);
+  }
+  .exam-title b{ color:var(--ink); }
+  .stat-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+  }
+  .qcount{
+    font-family:'Space Grotesk',sans-serif;
+    font-weight:600;
+    font-size:15px;
+  }
+  .qcount span{ color:var(--gold); }
+  .stopwatch{
+    display:flex;
+    align-items:center;
+    gap:7px;
+    background:var(--ink);
+    color:#fff;
+    padding:6px 12px;
+    border-radius:3px;
+    font-family:'IBM Plex Mono',monospace;
+    font-weight:600;
+    font-size:16px;
+    letter-spacing:.5px;
+  }
+  .dot{
+    width:7px;height:7px;border-radius:50%;
+    background:var(--gold);
+    animation:blink 1s steps(1) infinite;
+  }
+  @keyframes blink{ 50%{opacity:.25;} }
+  .progress-track{
+    height:4px;
+    background:var(--line);
+    border-radius:2px;
+    overflow:hidden;
+  }
+  .progress-fill{
+    height:100%;
+    background:var(--gold);
+    width:0%;
+    transition:width .25s ease;
+  }
+
+  /* ---- Palette strip ---- */
+  .palette{
+    display:flex;
+    gap:6px;
+    padding:10px 16px;
+    overflow-x:auto;
+    border-bottom:1px solid var(--line);
+    scrollbar-width:none;
+  }
+  .palette::-webkit-scrollbar{display:none;}
+  .pnode{
+    flex:0 0 auto;
+    width:26px;height:26px;
+    border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11px;font-weight:600;
+    border:1.5px solid var(--grey-dot);
+    color:var(--ink-soft);
+    background:var(--paper);
+    cursor:pointer;
+  }
+  .pnode.current{ border-color:var(--ink); box-shadow:0 0 0 2px var(--ink) inset; }
+  .pnode.visited{ border-color:var(--gold); color:var(--gold); }
+  .pnode.answered{ background:var(--ink); border-color:var(--ink); color:#fff; }
+
+  /* ---- Question body ---- */
+  main{
+    flex:1;
+    padding:20px 18px 12px;
+    display:flex;
+    flex-direction:column;
+  }
+  .q-num-badge{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12px;
+    color:var(--gold);
+    font-weight:600;
+    margin-bottom:8px;
+  }
+  .q-text{
+    font-size:18px;
+    line-height:1.5;
+    font-weight:600;
+    color:var(--ink);
+    margin-bottom:22px;
+  }
+  .options{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+  }
+  .opt{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:12px 14px;
+    border:1.5px solid var(--line);
+    border-radius:6px;
+    cursor:pointer;
+    background:var(--paper);
+    transition:border-color .15s, background .15s;
+  }
+  .opt:active{ background:#F5F6F8; }
+  .opt .tag{
+    flex:0 0 24px;
+    height:24px;
+    border-radius:50%;
+    border:1.5px solid var(--grey-dot);
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Space Grotesk',sans-serif;
+    font-size:12px;
+    font-weight:600;
+    color:var(--ink-soft);
+  }
+  .opt .word{
+    font-family:'Space Grotesk',sans-serif;
+    font-size:15.5px;
+    font-weight:500;
+    color:var(--ink);
+  }
+  .opt.selected{ border-color:var(--ink); background:#F6F7F9; }
+  .opt.selected .tag{ background:var(--ink); border-color:var(--ink); color:#fff; }
+
+  .opt.correct{ border-color:var(--green); background:var(--green-soft); }
+  .opt.correct .tag{ background:var(--green); border-color:var(--green); color:#fff; }
+  .opt.wrong{ border-color:var(--red); background:var(--red-soft); }
+  .opt.wrong .tag{ background:var(--red); border-color:var(--red); color:#fff; }
+
+  /* ---- Nav footer ---- */
+  footer{
+    padding:12px 16px 18px;
+    border-top:1px solid var(--line);
+    display:flex;
+    gap:10px;
+  }
+  button{
+    font-family:'Space Grotesk',sans-serif;
+    font-weight:600;
+    font-size:14.5px;
+    border-radius:5px;
+    border:none;
+    padding:13px 0;
+    cursor:pointer;
+  }
+  .btn-prev{
+    flex:0 0 84px;
+    background:var(--paper);
+    border:1.5px solid var(--line);
+    color:var(--ink-soft);
+  }
+  .btn-prev:disabled{ opacity:.4; cursor:not-allowed; }
+  .btn-next{
+    flex:1;
+    background:var(--ink);
+    color:#fff;
+  }
+  .btn-submit{
+    flex:1;
+    background:var(--gold);
+    color:#fff;
+  }
+
+  /* ---- Result screen ---- */
+  .result{
+    padding:28px 22px 24px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:6px;
+    flex:1;
+  }
+  .result-time{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12px;
+    color:var(--ink-soft);
+    letter-spacing:.5px;
+  }
+  .score-ring{
+    width:150px;height:150px;
+    border-radius:50%;
+    border:10px solid var(--gold-soft);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    margin:14px 0 6px;
+    position:relative;
+  }
+  .score-ring .num{
+    font-family:'Space Grotesk',sans-serif;
+    font-size:32px;
+    font-weight:700;
+    color:var(--ink);
+  }
+  .score-ring .of{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12px;
+    color:var(--ink-soft);
+  }
+  .marks-row{
+    display:flex;
+    gap:10px;
+    width:100%;
+    margin-top:16px;
+  }
+  .marks-card{
+    flex:1;
+    text-align:center;
+    padding:14px 6px;
+    border-radius:6px;
+    border:1.5px solid var(--ink);
+    background:#F6F7F9;
+  }
+  .marks-card .n{
+    font-family:'Space Grotesk',sans-serif;
+    font-weight:700;
+    font-size:22px;
+    color:var(--ink);
+  }
+  .marks-card .l{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:10px;
+    color:var(--ink-soft);
+    margin-top:3px;
+    letter-spacing:.5px;
+  }
+  .marks-card.neg .n{ color:var(--red); }
+  .breakdown{
+    display:flex;
+    gap:10px;
+    margin:18px 0 6px;
+    width:100%;
+  }
+  .bd-card{
+    flex:1;
+    text-align:center;
+    padding:12px 6px;
+    border-radius:6px;
+    border:1px solid var(--line);
+  }
+  .bd-card .n{
+    font-family:'Space Grotesk',sans-serif;
+    font-weight:700;
+    font-size:19px;
+  }
+  .bd-card .l{
+    font-family:'Space Grotesk',sans-serif;
+    font-size:11px;
+    color:var(--ink-soft);
+    margin-top:2px;
+  }
+  .bd-card.correct .n{ color:var(--green); }
+  .bd-card.wrong .n{ color:var(--red); }
+  .bd-card.skip .n{ color:var(--ink-soft); }
+
+  .motivation{
+    margin-top:22px;
+    padding:20px 18px;
+    background:var(--ink);
+    border-radius:8px;
+    text-align:center;
+    position:relative;
+  }
+  .motivation::before{
+    content:"";
+    position:absolute;
+    top:0; left:18px;
+    width:36px; height:3px;
+    background:var(--gold);
+  }
+  .motivation p{
+    font-family:'Space Grotesk',sans-serif;
+    font-weight:600;
+    font-size:15px;
+    line-height:1.45;
+    color:#fff;
+    margin:0;
+  }
+  .motivation span{
+    display:block;
+    margin-top:10px;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:10.5px;
+    color:var(--gold);
+    letter-spacing:1px;
+  }
+
+  .retake-btn{
+    margin-top:16px;
+    width:100%;
+    background:var(--gold);
+    color:#fff;
+    font-family:'Space Grotesk',sans-serif;
+    font-size:15px;
+    font-weight:600;
+    padding:12px 0;
+    border-radius:5px;
+    border:none;
+    cursor:pointer;
+  }
+
+  .review-list{ width:100%; margin-top:20px; text-align:left; }
+  .rev-title{
+    font-family:'Space Grotesk',sans-serif;
+    font-size:16px;
+    font-weight:700;
+    margin-bottom:12px;
+    color:var(--ink);
+    border-bottom:2px solid var(--line);
+    padding-bottom:6px;
+  }
+  .rev-item{
+    border-bottom:1px solid var(--line);
+    padding:12px 0;
+  }
+  .rev-item .rq{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11px;
+    color:var(--gold);
+    font-weight:600;
+    margin-bottom:4px;
+  }
+  .rev-item .rtext{
+    font-size:14.5px;
+    line-height:1.4;
+    margin-bottom:6px;
+    font-weight:600;
+  }
+  .rev-item .rans{
+    font-family:'Space Grotesk',sans-serif;
+    font-size:13px;
+    margin-top:2px;
+  }
+  .rev-item .rans.ok{ color:var(--green); }
+  .rev-item .rans.bad{ color:var(--red); }
+  .rev-item .rans.skip{ color:var(--ink-soft); }
+</style>
+</head>
+<body>
+<div id="app"></div>
+
+<script>
+const QUESTIONS = [
+["Recurrent","Happening repeatedly",["Recurrent","Reticent","Resilient","Redundant"]],
+["Red-Tapism","A process involving too much official formality",["Regalia","Red-Tapism","Rendition","Rhetoric"]],
+["Redundant","That which is no longer useful",["Repulsive","Reluctant","Redundant","Replica"]],
+["Referendum","A direct vote by citizens on a specific political issue or policy",["Regicide","Reprieve","Remission","Referendum"]],
+["Reflex","An involuntary action under a stimulus",["Reflex","Reminiscence","Reverie","Respiration"]],
+["Reformer","A person who works for gradual changes to improve a system",["Reformism","Reformer","Renegade","Refugee"]],
+["Reformism","The belief in bringing about gradual changes to improve a system",["Reformer","Renegade","Reformism","Regalia"]],
+["Refugee","A person forced to leave their country due to war, persecution, or danger",["Renegade","Repatriation","Relic","Refugee"]],
+["Regalia","The emblems and symbols of royalty; dress with medals and ribbons worn at official ceremonies",["Regalia","Relic","Requiem","Reveille"]],
+["Regicide","The killing of a king",["Repulsive","Regicide","Reprieve","Retaliate"]],
+["Rehabilitate","To restore someone to health or normal life after imprisonment, addiction, or illness",["Rejuvenate","Renovate","Rehabilitate","Replenish"]],
+["Rejuvenate","To make someone look or feel younger",["Rehabilitate","Renovate","Revamp","Rejuvenate"]],
+["Relapse","To fall back into a worse state after an improvement",["Relapse","Remission","Reprieve","Respite"]],
+["Relic","A holy person's remains or belongings kept for reverence; something surviving from an earlier period",["Replica","Relic","Regalia","Requiem"]],
+["Reluctant","Unwilling or hesitant to do something",["Reticent","Reserved","Reluctant","Reverent"]],
+["Remand","To send back a criminal into custody for further investigation",["Regicide","Repatriation","Retreat","Remand"]],
+["Reminiscence","The act of recalling past experiences with fondness",["Reminiscence","Reverie","Retrospection","Remorse"]],
+["Remission","Cancellation of a penalty or debt",["Reprieve","Remission","Respite","Relapse"]],
+["Remorse","A deep feeling of guilt and regret",["Repentance","Reminiscence","Remorse","Reluctant"]],
+["Remuneration","The amount paid to a person for their work",["Remission","Rendition","Reprieve","Remuneration"]],
+["Rendition","Artistic, musical, or dramatic interpretation",["Rendition","Remuneration","Reminiscence","Retrospection"]],
+["Renegade","One who deserts their principles or party",["Refugee","Renegade","Reformer","Reformism"]],
+["Renovate","To restore something to a better condition",["Rehabilitate","Rejuvenate","Renovate","Replenish"]],
+["Repatriation","The return of someone to their own country",["Refugee","Regicide","Remand","Repatriation"]],
+["Repentance","The feeling of sincere regret for one's sins",["Repentance","Remorse","Reverent","Reluctant"]],
+["Replenish","To fill up again",["Renovate","Replenish","Revamp","Rejuvenate"]],
+["Replica","An exact or very close copy of something",["Relic","Regalia","Replica","Rendition"]],
+["Reprieve","A temporary delay or suspension of punishment, especially a death sentence",["Remission","Respite","Relapse","Reprieve"]],
+["Reptile","A cold-blooded vertebrate animal such as a snake, lizard, or crocodile",["Reptile","Regicide","Relic","Requiem"]],
+["Repulsive","Causing a strong dislike",["Reticent","Repulsive","Reserved","Reluctant"]],
+["Requiem","A mass held to pray for the peace of the departed soul",["Reveille","Rendition","Requiem","Regalia"]],
+["Reserved","One who is silent or uncommunicative in speech",["Reticent","Repulsive","Reluctant","Reserved"]],
+["Reservoir","A large natural or artificial lake used as a source of water supply",["Reservoir","Requiem","Regalia","Relic"]],
+["Resilience","The ability to deal with any kind of hardship and recover from its effects",["Resilient","Resilience","Respite","Retrospection"]],
+["Resilient","Able to recover quickly from difficulties or setbacks",["Resilience","Reticent","Resilient","Reluctant"]],
+["Respiration","The process by means of which plants and animals breathe",["Reflex","Respite","Retreat","Respiration"]],
+["Respite","A short period of rest or relief from penalty or obligation",["Respite","Reprieve","Remission","Relapse"]],
+["Retaliate","To return the same sort of attack",["Revile","Retaliate","Ridicule","Retreat"]],
+["Reticent","Unwilling to speak about one's thoughts or feelings",["Reserved","Reluctant","Reticent","Repulsive"]],
+["Retrace","To go back over the same route that one has just taken",["Retreat","Retrospection","Remand","Retrace"]],
+["Retreat","To withdraw from a forward position in battle",["Retreat","Retrace","Regicide","Repatriation"]],
+["Retrospection","The action of reviewing past events in one's life",["Reminiscence","Retrospection","Reverie","Remorse"]],
+["Revamp","To renovate or improve",["Renovate","Rejuvenate","Revamp","Replenish"]],
+["Reveille","A tune that is played to wake soldiers in the morning",["Requiem","Rendition","Regalia","Reveille"]],
+["Revel","To take great pleasure in something",["Revel","Reverie","Reverent","Revile"]],
+["Reverent","Feeling or showing deep and solemn respect",["Reticent","Reverent","Reluctant","Reserved"]],
+["Reverie","A state of absent-minded daydreaming",["Retrospection","Reminiscence","Reverie","Revel"]],
+["Revile","To criticize in an abusive or angrily insulting manner",["Ridicule","Retaliate","Repulsive","Revile"]],
+["Rhetoric","The art of persuasive speaking or writing",["Rhetoric","Red-Tapism","Rendition","Reminiscence"]],
+["Rhinologist","A specialist in diseases of the nose",["Radiologist","Rhinologist","Cardiologist","Psychologist"]]
+];
+
+const START_NO = 1620;
+const N = QUESTIONS.length;
+const state = {
+  cur: 0,
+  answers: new Array(N).fill(null),
+  visited: new Array(N).fill(false),
+  seconds: 0,
+  timerId: null,
+  finished: false
+};
+
+const app = document.getElementById('app');
+
+function fmtTime(s){
+  const m = Math.floor(s/60).toString().padStart(2,'0');
+  const ss = (s%60).toString().padStart(2,'0');
+  return m + ":" + ss;
+}
+
+function startTimer(){
+  state.timerId = setInterval(()=>{
+    state.seconds++;
+    const el = document.getElementById('sw');
+    if(el) el.textContent = fmtTime(state.seconds);
+  }, 1000);
+}
+
+function stopTimer(){ clearInterval(state.timerId); }
+
+function renderPalette(){
+  let html = '<div class="palette">';
+  for(let i=0; i<N; i++){
+    let cls = 'pnode';
+    if(i === state.cur) cls += ' current';
+    else if(state.answers[i] !== null) cls += ' answered';
+    else if(state.visited[i]) cls += ' visited';
+    html += `<div class="${cls}" data-jump="${i}">${START_NO+i}</div>`;
+  }
+  html += '</div>';
+  return html;
+}
+
+function renderQuestion(){
+  state.visited[state.cur] = true;
+  const [answer, text, opts] = QUESTIONS[state.cur];
+  const chosen = state.answers[state.cur];
+  const letters = ['A','B','C','D'];
+
+  let optsHtml = '';
+  opts.forEach((opt, idx) => {
+    let cls = 'opt';
+    if(chosen === idx) cls += ' selected';
+    optsHtml += `<div class="${cls}" data-opt="${idx}">
+      <div class="tag">${letters[idx]}</div>
+      <div class="word">${opt}</div>
+    </div>`;
+  });
+
+  const pct = Math.round(((state.cur)/N)*100);
+
+  app.innerHTML = `
+    <header>
+      <div class="exam-title">SSC CGL — <b>One Word Substitution</b> Practice Set</div>
+      <div class="stat-row">
+        <div class="qcount">Question <span>${state.cur+1}</span> / ${N}</div>
+        <div class="stopwatch"><div class="dot"></div><span id="sw">${fmtTime(state.seconds)}</span></div>
+      </div>
+      <div class="progress-track"><div class="progress-fill" style="width:${pct}%"></div></div>
+    </header>
+    ${renderPalette()}
+    <main>
+      <div class="q-num-badge">Q. ${START_NO+state.cur}</div>
+      <div class="q-text">${text}</div>
+      <div class="options">${optsHtml}</div>
+    </main>
+    <footer>
+      <button class="btn-prev" ${state.cur===0?'disabled':''} id="prevBtn">Prev</button>
+      ${state.cur===N-1
+        ? `<button class="btn-submit" id="submitBtn">Submit Quiz</button>`
+        : `<button class="btn-next" id="nextBtn">Save & Next</button>`}
+    </footer>
+  `;
+
+  document.querySelectorAll('.opt').forEach(el=>{
+    el.addEventListener('click',()=>{
+      state.answers[state.cur] = parseInt(el.dataset.opt);
+      renderQuestion();
+    });
+  });
+  document.querySelectorAll('.pnode').forEach(el=>{
+    el.addEventListener('click',()=>{
+      state.cur = parseInt(el.dataset.jump);
+      renderQuestion();
+    });
+  });
+  const prevBtn = document.getElementById('prevBtn');
+  if(prevBtn) prevBtn.addEventListener('click',()=>{ state.cur--; renderQuestion(); });
+  const nextBtn = document.getElementById('nextBtn');
+  if(nextBtn) nextBtn.addEventListener('click',()=>{ state.cur++; renderQuestion(); });
+  const submitBtn = document.getElementById('submitBtn');
+  if(submitBtn) submitBtn.addEventListener('click', finishQuiz);
+}
+
+const LINES = [
+  "Every word you master today is a mark you claim tomorrow — the exam doesn't wait, and neither should you.",
+  "Discipline beats motivation on the days it matters most. Show up, drill again, and let the rank follow.",
+  "The gap between a selection letter and a rejection is usually just one more revision. Go do that one more.",
+  "You don't need to feel ready. You need to keep showing up until ready stops being the question.",
+  "Toppers aren't the ones who never struggled with a word list — they're the ones who came back to it anyway."
+];
+
+function finishQuiz(){
+  stopTimer();
+  state.finished = true;
+
+  let correct=0, wrong=0, skipped=0;
+  const reviewList = [];
+
+  QUESTIONS.forEach((q, i) => {
+    const [answer, text, opts] = q;
+    const chosen = state.answers[i];
+    if(chosen === null){
+      skipped++;
+      reviewList.push({ idx: i, text, answer, userAns: "Not Attempted", status: "skip" });
+    }
+    else if(opts[chosen] === answer){
+      correct++;
+    }
+    else {
+      wrong++;
+      reviewList.push({ idx: i, text, answer, userAns: opts[chosen], status: "bad" });
+    }
+  });
+
+  const line = LINES[Math.floor(Math.random()*LINES.length)];
+
+  const MARKS_CORRECT = 2;
+  const MARKS_WRONG = 0.5;
+  const positiveMarks = correct * MARKS_CORRECT;
+  const negativeMarks = wrong * MARKS_WRONG;
+  const netMarks = positiveMarks - negativeMarks;
+  const maxMarks = N * MARKS_CORRECT;
+  const fmtMark = v => (Number.isInteger(v) ? v : v.toFixed(1));
+
+  let reviewHtml = '';
+  if(reviewList.length > 0){
+    reviewHtml = '<div class="review-list"><div class="rev-title">Mistakes & Skipped Review</div>';
+    reviewList.forEach(item => {
+      reviewHtml += `
+        <div class="rev-item">
+          <div class="rq">Q.${START_NO + item.idx}</div>
+          <div class="rtext">${item.text}</div>
+          <div class="rans ${item.status}">Your Answer: ${item.userAns}</div>
+          <div class="rans ok">Correct Answer: ${item.answer}</div>
+        </div>
+      `;
+    });
+    reviewHtml += '</div>';
+  }
+
+  app.innerHTML = `
+    <div class="result">
+      <div class="exam-title">SSC CGL — OWS Practice Result</div>
+      <div class="result-time">TIME TAKEN: ${fmtTime(state.seconds)}</div>
+      
+      <div class="score-ring">
+        <div class="num">${fmtMark(netMarks)}</div>
+        <div class="of">OUT OF ${maxMarks}</div>
+      </div>
+
+      <div class="marks-row">
+        <div class="marks-card">
+          <div class="n">+${positiveMarks}</div>
+          <div class="l">POSITIVE MARKS</div>
+        </div>
+        <div class="marks-card neg">
+          <div class="n">-${negativeMarks}</div>
+          <div class="l">NEGATIVE MARKS</div>
+        </div>
+      </div>
+
+      <div class="breakdown">
+        <div class="bd-card correct">
+          <div class="n">${correct}</div>
+          <div class="l">Correct</div>
+        </div>
+        <div class="bd-card wrong">
+          <div class="n">${wrong}</div>
+          <div class="l">Incorrect</div>
+        </div>
+        <div class="bd-card skip">
+          <div class="n">${skipped}</div>
+          <div class="l">Skipped</div>
+        </div>
+      </div>
+
+      <div class="motivation">
+        <p>"${line}"</p>
+        <span>TARGET SSC CGL — KEEP GOING!</span>
+      </div>
+
+      ${reviewHtml}
+
+      <button class="retake-btn" onclick="location.reload()">Re-take Practice Test</button>
+    </div>
+  `;
+}
+
+// Start Quiz
+startTimer();
+renderQuestion();
+</script>
+</body>
+</html>
