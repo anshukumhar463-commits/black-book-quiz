@@ -1,488 +1,320 @@
 <!DOCTYPE html>
 <html lang="hi">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SSC CGL Mock Test - 50 OWS Questions</title>
-  <style>
-    * {
-      box-sizing: border-box;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-    }
-
-    body {
-      background-color: #f4f5f7;
-      display: flex;
-      justify-content: center;
-      padding: 15px;
-    }
-
-    .quiz-card {
-      background: #ffffff;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-      width: 100%;
-      max-width: 500px;
-      padding: 20px;
-      position: relative;
-    }
-
-    .header-section {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: 20px;
-    }
-
-    .quiz-title {
-      font-size: 18px;
-      font-weight: 700;
-      color: #1c1e21;
-      line-height: 1.3;
-      max-width: 65%;
-    }
-
-    .timer-badge {
-      background-color: #28a745;
-      color: white;
-      padding: 8px 12px;
-      border-radius: 6px;
-      text-align: center;
-      font-size: 12px;
-      font-weight: 600;
-      line-height: 1.2;
-    }
-
-    .timer-badge .time {
-      font-size: 14px;
-      margin-top: 2px;
-    }
-
-    .nav-label {
-      font-size: 13px;
-      color: #555;
-      margin-bottom: 10px;
-      font-weight: 500;
-    }
-
-    .question-grid {
-      background-color: #f8f9fa;
-      border: 1px solid #e2e8f0;
-      border-radius: 8px;
-      padding: 10px;
-      display: grid;
-      grid-template-columns: repeat(7, 1fr);
-      gap: 6px;
-      margin-bottom: 20px;
-      max-height: 150px;
-      overflow-y: auto;
-    }
-
-    .btn-num {
-      background: #ffffff;
-      border: 1px solid #cbd5e1;
-      border-radius: 4px;
-      height: 30px;
-      font-size: 12px;
-      font-weight: 600;
-      color: #333;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .btn-num.active {
-      border: 2px solid #3b82f6;
-      background-color: #eff6ff;
-      color: #1d4ed8;
-    }
-
-    .btn-num.answered {
-      background-color: #28a745;
-      color: white;
-      border-color: #28a745;
-    }
-
-    .question-text {
-      font-size: 15px;
-      color: #1a202c;
-      font-weight: 500;
-      line-height: 1.4;
-      margin-bottom: 20px;
-      min-height: 50px;
-    }
-
-    .options-group {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      margin-bottom: 24px;
-    }
-
-    .option-btn {
-      display: flex;
-      align-items: center;
-      border: 1px solid #e2e8f0;
-      border-radius: 8px;
-      padding: 10px 14px;
-      background: #ffffff;
-      cursor: pointer;
-      font-size: 14px;
-      color: #2d3748;
-      transition: border-color 0.2s;
-    }
-
-    .option-btn:hover {
-      border-color: #cbd5e1;
-    }
-
-    .option-btn input[type="radio"] {
-      margin-right: 12px;
-      width: 16px;
-      height: 16px;
-      accent-color: #3b82f6;
-      cursor: pointer;
-    }
-
-    .action-buttons {
-      display: flex;
-      gap: 10px;
-      justify-content: space-between;
-    }
-
-    .btn {
-      border: none;
-      border-radius: 6px;
-      padding: 10px 14px;
-      font-weight: 600;
-      font-size: 14px;
-      cursor: pointer;
-      flex: 1;
-      text-align: center;
-    }
-
-    .btn-prev {
-      background-color: #cbd5e1;
-      color: #ffffff;
-    }
-
-    .btn-prev:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-    }
-
-    .btn-next {
-      background-color: #0088ff;
-      color: #ffffff;
-    }
-
-    .btn-submit {
-      background-color: #28a745;
-      color: #ffffff;
-    }
-
-    /* RESULT MODAL STYLES */
-    .modal-overlay {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.6);
-      justify-content: center;
-      align-items: center;
-      z-index: 1000;
-      padding: 15px;
-    }
-
-    .result-box {
-      background: #ffffff;
-      width: 100%;
-      max-width: 440px;
-      border-radius: 12px;
-      padding: 24px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-      text-align: center;
-    }
-
-    .result-box h2 {
-      font-size: 22px;
-      color: #1a202c;
-      margin-bottom: 15px;
-    }
-
-    .score-banner {
-      background: #eef2ff;
-      border: 1px solid #c7d2fe;
-      border-radius: 8px;
-      padding: 15px;
-      margin-bottom: 20px;
-    }
-
-    .score-banner .marks {
-      font-size: 32px;
-      font-weight: 800;
-      color: #3730a3;
-    }
-
-    .result-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-bottom: 20px;
-      text-align: left;
-    }
-
-    .res-item {
-      background: #f8fafc;
-      border: 1px solid #e2e8f0;
-      padding: 10px 12px;
-      border-radius: 6px;
-      font-size: 13px;
-    }
-
-    .res-item span {
-      display: block;
-      font-weight: 700;
-      font-size: 16px;
-      margin-top: 4px;
-    }
-
-    .text-green { color: #16a34a; }
-    .text-red { color: #dc2626; }
-    .text-gray { color: #64748b; }
-    .text-blue { color: #2563eb; }
-
-    .btn-restart {
-      background-color: #3b82f6;
-      color: white;
-      width: 100%;
-      padding: 12px;
-      border: none;
-      border-radius: 6px;
-      font-weight: 700;
-      font-size: 15px;
-      cursor: pointer;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SSC CGL English OWS Quiz (50 Questions)</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            background-color: #f0f2f5;
+            color: #333;
+            padding-bottom: 80px;
+        }
+        header {
+            position: sticky;
+            top: 0;
+            background: #1a237e;
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+        .header-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+        .timer-box {
+            background: #ff9800;
+            color: #000;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            font-family: monospace;
+        }
+        .container {
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 0 15px;
+        }
+        .card {
+            background: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            border-left: 5px solid #1a237e;
+        }
+        .q-num {
+            font-weight: bold;
+            color: #1a237e;
+            margin-bottom: 8px;
+            font-size: 1rem;
+        }
+        .q-text {
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+        }
+        @media(min-width: 600px) {
+            .options-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        .option-btn {
+            background: #f8f9fa;
+            border: 1.5px solid #ced4da;
+            padding: 12px 15px;
+            border-radius: 6px;
+            text-align: left;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.2s ease;
+            width: 100%;
+        }
+        .option-btn:hover {
+            background: #e9ecef;
+            border-color: #adb5bd;
+        }
+        .option-btn.selected {
+            background: #e3f2fd;
+            border-color: #2196f3;
+            color: #0d47a1;
+            font-weight: bold;
+        }
+        .option-btn.correct {
+            background: #d4edda !important;
+            border-color: #28a745 !important;
+            color: #155724 !important;
+            font-weight: bold;
+        }
+        .option-btn.incorrect {
+            background: #f8d7da !important;
+            border-color: #dc3545 !important;
+            color: #721c24 !important;
+        }
+        .footer-controls {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            padding: 15px 20px;
+            border-top: 1px solid #ddd;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+        }
+        .submit-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .submit-btn:hover {
+            background: #218838;
+        }
+        #result-modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6);
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            max-width: 450px;
+            width: 90%;
+            text-align: center;
+        }
+        .score-box {
+            font-size: 2rem;
+            color: #1a237e;
+            margin: 15px 0;
+            font-weight: bold;
+        }
+        .close-btn {
+            background: #1a237e;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+    </style>
 </head>
 <body>
 
-  <div class="quiz-card">
-    <div class="header-section">
-      <div class="quiz-title">SSC CGL OWS (Q, R & A, B, C, D)</div>
-      <div class="timer-badge">
-        Time Taken:<br>
-        <div class="time" id="timer">00:00</div>
-      </div>
+    <header>
+        <div class="header-title">SSC CGL Pattern Quiz (50 OWS Questions)</div>
+        <div class="timer-box" id="timer">00:00:00</div>
+    </header>
+
+    <div class="container" id="quiz-container">
+        <!-- Questions injected here -->
     </div>
 
-    <div class="nav-label">Question Navigation (Click to Jump):</div>
-    <div class="question-grid" id="grid-container"></div>
-
-    <div class="question-text" id="question-text">Loading...</div>
-
-    <div class="options-group" id="options-container"></div>
-
-    <div class="action-buttons">
-      <button class="btn btn-prev" id="btn-prev" onclick="changeQuestion(-1)">Previous</button>
-      <button class="btn btn-next" id="btn-next" onclick="changeQuestion(1)">Next</button>
-      <button class="btn btn-submit" onclick="submitQuiz()">Submit Test</button>
+    <div class="footer-controls">
+        <div id="progress-text">Answered: 0 / 50</div>
+        <button class="submit-btn" onclick="submitQuiz()">Submit Test</button>
     </div>
-  </div>
 
-  <!-- RESULT POPUP MODAL -->
-  <div class="modal-overlay" id="resultModal">
-    <div class="result-box">
-      <h2>🎉 Test Summary</h2>
-      
-      <div class="score-banner">
-        <div>Your Total Score</div>
-        <div class="marks" id="res-score">0 / 100</div>
-        <small id="res-accuracy" style="color: #4b5563;">Accuracy: 0%</small>
-      </div>
-
-      <div class="result-grid">
-        <div class="res-item">
-          Correct (+2 each)
-          <span class="text-green" id="res-correct">0</span>
+    <div id="result-modal">
+        <div class="modal-content">
+            <h2>Test Summary</h2>
+            <div class="score-box" id="score-text">0 / 100</div>
+            <p id="time-taken-text"></p>
+            <p id="stats-text" style="margin-top:10px; color:#555;"></p>
+            <button class="close-btn" onclick="closeModal()">Review Answers</button>
         </div>
-        <div class="res-item">
-          Incorrect (-0.5 each)
-          <span class="text-red" id="res-wrong">0</span>
-        </div>
-        <div class="res-item">
-          Negative Marks
-          <span class="text-red" id="res-negative">-0.00</span>
-        </div>
-        <div class="res-item">
-          Unattempted
-          <span class="text-gray" id="res-unattempted">0</span>
-        </div>
-        <div class="res-item" style="grid-column: span 2;">
-          Total Time Taken
-          <span class="text-blue" id="res-time">00:00</span>
-        </div>
-      </div>
-
-      <button class="btn-restart" onclick="location.reload()">Re-take Test</button>
     </div>
-  </div>
 
-  <script>
-    const quizData = [
-      // --- ALL 12 QUESTIONS OF LETTER Q ---
-      { q: "Q1. The sound made by ducks; A person who pretends to have more knowledge than he actually possesses", options: ["(a) Quack", "(b) Quass", "(c) Quaver", "(d) Quest"], answer: 0 },
-      { q: "Q2. A court or open space, usually rectangular, enclosed by a building", options: ["(a) Quadrangle", "(b) Quadruped", "(c) Quash", "(d) Quiver"], answer: 0 },
-      { q: "Q3. A creature with four feet", options: ["(a) Quadruped", "(b) Quadrangle", "(c) Quack", "(d) Quorum"], answer: 0 },
-      { q: "Q4. To reject as invalid, especially by legal procedure", options: ["(a) Quash", "(b) Quaver", "(c) Quest", "(d) Quixotic"], answer: 0 },
-      { q: "Q5. To shake or tremble in voice", options: ["(a) Quaver", "(b) Quell", "(c) Quiver", "(d) Quash"], answer: 0 },
-      { q: "Q6. A search for something", options: ["(a) Quest", "(b) Quorum", "(c) Quill", "(d) Quiver"], answer: 0 },
-      { q: "Q7. Changing quickly and unpredictably", options: ["(a) Quicksilver", "(b) Quixotic", "(c) Quite", "(d) Quaver"], answer: 0 },
-      { q: "Q8. A feather used as a pen", options: ["(a) Quill", "(b) Quiver", "(c) Quack", "(d) Quest"], answer: 0 },
-      { q: "Q9. Occurring once every five years", options: ["(a) Quinquennial", "(b) Bicentennial", "(c) Quixotic", "(d) Quorum"], answer: 0 },
-      { q: "Q10. To the utmost or most absolute extent or degree", options: ["(a) Quite", "(b) Quash", "(c) Quaver", "(d) Quill"], answer: 0 },
-      { q: "Q11. Unrealistically optimistic or idealistic", options: ["(a) Quixotic", "(b) Quaver", "(c) Quash", "(d) Quest"], answer: 0 },
-      { q: "Q12. The minimum number of people needed for a meeting", options: ["(a) Quorum", "(b) Quinquennial", "(c) Quack", "(d) Quadrangle"], answer: 0 },
+    <script>
+        const questionsData = [{"id": 1, "question": "One who wanders from place to place without a settled home", "options": ["Venture", "Vagabond", "Volunteer", "Vivacious"], "answer": "Vagabond"}, {"id": 2, "question": "A person who wanders from place to place without a home or job", "options": ["Vivacious", "Vagrant", "Villain", "Vis-a-vis"], "answer": "Vagrant"}, {"id": 3, "question": "Having or showing an excessively high opinion of one's appearance, abilities, or worth", "options": ["Vain", "Vaticide", "Vendetta", "Venture"], "answer": "Vain"}, {"id": 4, "question": "A person who is unduly anxious about their health", "options": ["Valetudinarian", "Vindictive", "Venture", "Velocity"], "answer": "Valetudinarian"}, {"id": 5, "question": "A low area of land between hills", "options": ["Venerable", "Volunteer", "Vagrant", "Valley"], "answer": "Valley"}, {"id": 6, "question": "One who deliberately damages public property", "options": ["Verbosity", "Vertebrate", "Vindicate", "Vandal"], "answer": "Vandal"}, {"id": 7, "question": "The killing of a prophet", "options": ["Vaticide", "Vestige", "Vengeful", "Venial"], "answer": "Vaticide"}, {"id": 8, "question": "A person who does not eat or use any animal products", "options": ["Vegan", "Volley", "Verbatim", "Viticulture"], "answer": "Vegan"}, {"id": 9, "question": "One who does not eat meat", "options": ["Vaticide", "Vestige", "Vengeful", "Vegetarian"], "answer": "Vegetarian"}, {"id": 10, "question": "Showing strong feeling", "options": ["Volunteer", "Venerate", "Vehement", "Virulent"], "answer": "Vehement"}, {"id": 11, "question": "The speed of something in a particular direction", "options": ["Verbose", "Velocity", "Vindictive", "Valley"], "answer": "Velocity"}, {"id": 12, "question": "A prolonged bitter quarrel with someone, especially involving murder in revenge", "options": ["Verbiage", "Vendetta", "Verbosity", "Volunteer"], "answer": "Vendetta"}, {"id": 13, "question": "Accorded great respect, especially because of age, wisdom, or character", "options": ["Voyage", "Vaticide", "Vengeful", "Venerable"], "answer": "Venerable"}, {"id": 14, "question": "To regard with great respect", "options": ["Valetudinarian", "Visionary", "Venerate", "Venerable"], "answer": "Venerate"}, {"id": 15, "question": "Seeking to harm someone in return for a perceived injury", "options": ["Vengeful", "Venture", "Venerate", "Visionary"], "answer": "Vengeful"}, {"id": 16, "question": "A sin or fault that is not serious and can be forgiven", "options": ["Vaticide", "Vestige", "Vindictive", "Venial"], "answer": "Venial"}, {"id": 17, "question": "One who speaks without moving the lips, creating the illusion that the voice comes from elsewhere", "options": ["Venerate", "Ventriloquist", "Veteran", "Vicinity"], "answer": "Ventriloquist"}, {"id": 18, "question": "A new project or business activity involving some risk", "options": ["Verbiage", "Verbose", "Volition", "Venture"], "answer": "Venture"}, {"id": 19, "question": "Conformity to facts", "options": ["Verbiage", "Vintage", "Veracity", "Veteran"], "answer": "Veracity"}, {"id": 20, "question": "In exactly the same words as were used originally", "options": ["Ventriloquist", "Vaticide", "Verbatim", "Valetudinarian"], "answer": "Verbatim"}, {"id": 21, "question": "The use of too many words or of more difficult words than are needed to express an idea", "options": ["Vegan", "Verbose", "Venture", "Verbiage"], "answer": "Verbiage"}, {"id": 22, "question": "Containing more words than necessary", "options": ["Vindictive", "Verbose", "Vehement", "Voluntary"], "answer": "Verbose"}, {"id": 23, "question": "The quality of using more words than are needed", "options": ["Verbosity", "Vestige", "Vandal", "Vagrant"], "answer": "Verbosity"}, {"id": 24, "question": "A decision made by a jury in a court", "options": ["Volley", "Virtue", "Veterinarian", "Verdict"], "answer": "Verdict"}, {"id": 25, "question": "Having many different skills", "options": ["Versatile", "Ventriloquist", "Vicinity", "Vaticide"], "answer": "Versatile"}, {"id": 26, "question": "An animal with a spinal cord", "options": ["Vespers", "Vagrant", "Verbose", "Vertebrate"], "answer": "Vertebrate"}, {"id": 27, "question": "The evening prayer service in a church", "options": ["Vindicate", "Volition", "Vegan", "Vespers"], "answer": "Vespers"}, {"id": 28, "question": "A trace of something that no longer exists", "options": ["Verdict", "Vivacious", "Vagabond", "Vestige"], "answer": "Vestige"}, {"id": 29, "question": "A person who is long experienced or practiced in an activity", "options": ["Volunteer", "Veteran", "Venture", "Vertebrate"], "answer": "Veteran"}, {"id": 30, "question": "A person qualified to treat diseases and injuries in animals", "options": ["Virulent", "Vespers", "Veterinarian", "Verbatim"], "answer": "Veterinarian"}, {"id": 31, "question": "The area near or surrounding a particular place", "options": ["Verbose", "Vicinity", "Veteran", "Verbatim"], "answer": "Vicinity"}, {"id": 32, "question": "An evil or wicked character, especially in a story or play", "options": ["Villain", "Venture", "Volley", "Verbatim"], "answer": "Villain"}, {"id": 33, "question": "To clear someone of blame or suspicion", "options": ["Vindicate", "Virtuoso", "Volley", "Vagabond"], "answer": "Vindicate"}, {"id": 34, "question": "Having or showing a strong desire for revenge", "options": ["Villain", "Vindictive", "Veteran", "Verbosity"], "answer": "Vindictive"}, {"id": 35, "question": "Something of high quality belonging to a past era", "options": ["Vintage", "Verbose", "Venerate", "Vandal"], "answer": "Vintage"}, {"id": 36, "question": "A morally good quality or behaviour", "options": ["Virtue", "Vendetta", "Venture", "Vandal"], "answer": "Virtue"}, {"id": 37, "question": "A person who possesses outstanding technical ability in a particular art or field", "options": ["Volley", "Voyage", "Virtuoso", "Vulnerable"], "answer": "Virtuoso"}, {"id": 38, "question": "Of a disease or poison, extremely severe or harmful in its effects", "options": ["Voluntary", "Virulent", "Veterinarian", "Viticulture"], "answer": "Virulent"}, {"id": 39, "question": "In relation to or in comparison with", "options": ["Verdict", "Vandal", "Vaticide", "Vis-a-vis"], "answer": "Vis-a-vis"}, {"id": 40, "question": "Having or showing clear ideas about what should happen in the future", "options": ["Vindictive", "Visionary", "Voyage", "Valetudinarian"], "answer": "Visionary"}, {"id": 41, "question": "The cultivation of grapevines", "options": ["Viticulture", "Venture", "Veteran", "Volunteer"], "answer": "Viticulture"}, {"id": 42, "question": "Having a lively, attractive personality", "options": ["Venerable", "Veteran", "Vivacious", "Vintage"], "answer": "Vivacious"}, {"id": 43, "question": "Easily evaporated at normal temperatures", "options": ["Veracity", "Verbosity", "Volatile", "Verbiage"], "answer": "Volatile"}, {"id": 44, "question": "The faculty or power of using one's will", "options": ["Venerate", "Veracity", "Volition", "Verbatim"], "answer": "Volition"}, {"id": 45, "question": "A simultaneous discharge or series of shots or missiles", "options": ["Vagrant", "Valetudinarian", "Volley", "Veterinarian"], "answer": "Volley"}, {"id": 46, "question": "Of one's own free will", "options": ["Volatile", "Voluntary", "Voyage", "Venerate"], "answer": "Voluntary"}, {"id": 47, "question": "One who freely offers to do something", "options": ["Venerate", "Veterinarian", "Volunteer", "Vindictive"], "answer": "Volunteer"}, {"id": 48, "question": "Having a very eager appetite, especially for food or reading", "options": ["Volatile", "Virulent", "Voracious", "Vindicate"], "answer": "Voracious"}, {"id": 49, "question": "A long sea journey", "options": ["Virtuoso", "Venerate", "Voyage", "Vis-a-vis"], "answer": "Voyage"}, {"id": 50, "question": "Exposed to the possibility of being attacked or harmed, either physically or emotionally", "options": ["Velocity", "Villain", "Vulnerable", "Virulent"], "answer": "Vulnerable"}];
+        let userAnswers = {};
+        let secondsElapsed = 0;
+        let timerInterval = null;
 
-      // --- ALL 22 QUESTIONS OF LETTER R ---
-      { q: "Q13. A person who is good at telling stories in an interesting and amusing way", options: ["(a) Raconteur", "(b) Radical", "(c) Radiologist", "(d) Rebel"], answer: 0 },
-      { q: "Q14. The act of spreading outward from a central source", options: ["(a) Radiation", "(b) Radical", "(c) Radiology", "(d) Ramification"], answer: 0 },
-      { q: "Q15. A person who advocates complete political or social change", options: ["(a) Radical", "(b) Raconteur", "(c) Rebel", "(d) Recluse"], answer: 0 },
-      { q: "Q16. A doctor who specialises in diagnosing diseases using X-rays, CT scans, and imaging", options: ["(a) Radiologist", "(b) Cardiologist", "(c) Radiographer", "(d) Radiology"], answer: 0 },
-      { q: "Q17. The science dealing with X-rays and other high-energy waves for diagnosing and treating diseases", options: ["(a) Radiology", "(b) Radiologist", "(c) Cardiology", "(d) Demography"], answer: 0 },
-      { q: "Q18. Speaking at length about trivial things", options: ["(a) Rambling", "(b) Rampage", "(c) Rancid", "(d) Rancorous"], answer: 0 },
-      { q: "Q19. A complex or unwanted consequence of an action", options: ["(a) Ramification", "(b) Rationale", "(c) Rebate", "(d) Ransom"], answer: 0 },
-      { q: "Q20. To go through an area making a lot of noise and causing damage", options: ["(a) Rampage", "(b) Rambling", "(c) Rancid", "(d) Recant"], answer: 0 },
-      { q: "Q21. Having a stale smell or taste", options: ["(a) Rancid", "(b) Rancorous", "(c) Rapacious", "(d) Receptive"], answer: 0 },
-      { q: "Q22. Characterized by bitterness or resentment", options: ["(a) Rancorous", "(b) Rancid", "(c) Rapacious", "(d) Radical"], answer: 0 },
-      { q: "Q23. A sum of money demanded for the release of a prisoner", options: ["(a) Ransom", "(b) Rebate", "(c) Rationale", "(d) Recant"], answer: 0 },
-      { q: "Q24. Greedy for money", options: ["(a) Rapacious", "(b) Rancorous", "(c) Radical", "(d) Recluse"], answer: 0 },
-      { q: "Q25. The reasons or intentions behind a particular set of beliefs or actions", options: ["(a) Rationale", "(b) Ramification", "(c) Rebate", "(d) Rectify"], answer: 0 },
-      { q: "Q26. A reduction in tax or debt", options: ["(a) Rebate", "(b) Ransom", "(c) Rationale", "(d) Recant"], answer: 0 },
-      { q: "Q27. One who opposes or takes arms against a government or ruler", options: ["(a) Rebel", "(b) Recluse", "(c) Radical", "(d) Raconteur"], answer: 0 },
-      { q: "Q28. To withdraw a statement or belief publicly", options: ["(a) Recant", "(b) Rectify", "(c) Reciprocate", "(d) Rebate"], answer: 0 },
-      { q: "Q29. A hollow object used to contain something", options: ["(a) Receptacle", "(b) Reciprocate", "(c) Rectify", "(d) Recluse"], answer: 0 },
-      { q: "Q30. To give and receive mutually", options: ["(a) Reciprocate", "(b) Receptacle", "(c) Recant", "(d) Rectify"], answer: 0 },
-      { q: "Q31. A person who lives alone and avoids other people", options: ["(a) Recluse", "(b) Rebel", "(c) Radical", "(d) Raconteur"], answer: 0 },
-      { q: "Q32. Preferring to live alone and avoid other people", options: ["(a) Reclusive", "(b) Receptacle", "(c) Recluse", "(d) Rationale"], answer: 0 },
-      { q: "Q33. To set right what is wrong or inaccurate", options: ["(a) Rectify", "(b) Recant", "(c) Reciprocate", "(d) Rebate"], answer: 0 },
-      { q: "Q34. Moving in or formed by straight lines", options: ["(a) Rectilinear", "(b) Radical", "(c) Radiation", "(d) Rationale"], answer: 0 },
-
-      // --- LETTER A (4 Questions) ---
-      { q: "Q35. To become less intense or widespread", options: ["(a) Abate", "(b) Abattoir", "(c) Abbot", "(d) Abdicate"], answer: 0 },
-      { q: "Q36. To give up one's authority or throne", options: ["(a) Abdicate", "(b) Abrogate", "(c) Abolish", "(d) Abscond"], answer: 0 },
-      { q: "Q37. Deviation from the right course", options: ["(a) Aberration", "(b) Abeyance", "(c) Ablution", "(d) Aboriginal"], answer: 0 },
-      { q: "Q38. To formally put an end to a system, practice, or institution", options: ["(a) Abolish", "(b) Abrogate", "(c) Abridge", "(d) Abdicate"], answer: 0 },
-
-      // --- LETTER B (4 Questions) ---
-      { q: "Q39. Having no hair on the scalp", options: ["(a) Bald", "(b) Bale", "(c) Bard", "(d) Bark"], answer: 0 },
-      { q: "Q40. A poem that tells a story and has a regular rhythm and rhyme scheme", options: ["(a) Ballad", "(b) Balderdash", "(c) Banter", "(d) Barometer"], answer: 0 },
-      { q: "Q41. A group of guns or missile launchers operated together at one place", options: ["(a) Battery", "(b) Barrel", "(c) Barracks", "(d) Behemoth"], answer: 0 },
-      { q: "Q42. One who helps others by giving money or other aid", options: ["(a) Benefactor", "(b) Beneficiary", "(c) Bibliophile", "(d) Betrothed"], answer: 0 },
-
-      // --- LETTER C (4 Questions) ---
-      { q: "Q43. A harsh, discordant mixture of sounds", options: ["(a) Cacophony", "(b) Cacographer", "(c) Cacophobia", "(d) Cadence"], answer: 0 },
-      { q: "Q44. One who is devoid of kind feeling and sympathy", options: ["(a) Callous", "(b) Calligrapher", "(c) Camouflage", "(d) Cannibal"], answer: 0 },
-      { q: "Q45. The act of disguising to blend with the surroundings", options: ["(a) Camouflage", "(b) Callous", "(c) Caravan", "(d) Caricature"], answer: 0 },
-      { q: "Q46. A person who eats human flesh", options: ["(a) Cannibal", "(b) Carnivore", "(c) Carnitarian", "(d) Callous"], answer: 0 },
-
-      // --- LETTER D (4 Questions) ---
-      { q: "Q47. The act of injuring another's reputation by slanderous communication", options: ["(a) Defamation", "(b) Defame", "(c) Defiance", "(d) Deficiency"], answer: 0 },
-      { q: "Q48. An open refusal to obey orders or authority", options: ["(a) Defiance", "(b) Defamation", "(c) Deficiency", "(d) Deliberate"], answer: 0 },
-      { q: "Q49. A political leader who seeks support by appealing to popular desires and prejudices rather than rational argument", options: ["(a) Demagogue", "(b) Democracy", "(c) Demography", "(d) Deponent"], answer: 0 },
-      { q: "Q50. The study of population and its dynamics", options: ["(a) Demography", "(b) Demagogue", "(c) Democracy", "(d) Deliberation"], answer: 0 }
-    ];
-
-    let currentQ = 0;
-    let userAnswers = new Array(quizData.length).fill(null);
-    let timerInterval;
-
-    function loadQuestion() {
-      const qData = quizData[currentQ];
-      document.getElementById('question-text').innerText = qData.q;
-      
-      const optionsContainer = document.getElementById('options-container');
-      optionsContainer.innerHTML = '';
-
-      qData.options.forEach((opt, idx) => {
-        const isChecked = userAnswers[currentQ] === idx ? 'checked' : '';
-        optionsContainer.innerHTML += `
-          <label class="option-btn">
-            <input type="radio" name="option" value="${idx}" ${isChecked} onchange="selectOption(${idx})"> ${opt}
-          </label>
-        `;
-      });
-
-      document.getElementById('btn-prev').disabled = currentQ === 0;
-      document.getElementById('btn-next').innerText = currentQ === quizData.length - 1 ? 'Finish' : 'Next';
-
-      renderGrid();
-    }
-
-    function selectOption(index) {
-      userAnswers[currentQ] = index;
-      renderGrid();
-    }
-
-    function changeQuestion(direction) {
-      if (currentQ + direction >= 0 && currentQ + direction < quizData.length) {
-        currentQ += direction;
-        loadQuestion();
-      }
-    }
-
-    function renderGrid() {
-      const grid = document.getElementById('grid-container');
-      grid.innerHTML = '';
-      quizData.forEach((_, idx) => {
-        let classes = 'btn-num';
-        if (idx === currentQ) classes += ' active';
-        else if (userAnswers[idx] !== null) classes += ' answered';
-
-        grid.innerHTML += `<button class="${classes}" onclick="jumpToQuestion(${idx})">${idx + 1}</button>`;
-      });
-    }
-
-    function jumpToQuestion(idx) {
-      currentQ = idx;
-      loadQuestion();
-    }
-
-    // SUBMIT & CALCULATE MARKS
-    function submitQuiz() {
-      clearInterval(timerInterval);
-
-      let correct = 0;
-      let wrong = 0;
-      let unattempted = 0;
-
-      userAnswers.forEach((ans, idx) => {
-        if (ans === null) {
-          unattempted++;
-        } else if (ans === quizData[idx].answer) {
-          correct++;
-        } else {
-          wrong++;
+        // Start Clock from 00:00:00
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                secondsElapsed++;
+                let hrs = Math.floor(secondsElapsed / 3600);
+                let mins = Math.floor((secondsElapsed % 3600) / 60);
+                let secs = secondsElapsed % 60;
+                
+                document.getElementById('timer').innerText = 
+                    (hrs < 10 ? "0" + hrs : hrs) + ":" + 
+                    (mins < 10 ? "0" + mins : mins) + ":" + 
+                    (secs < 10 ? "0" + secs : secs);
+            }, 1000);
         }
-      });
 
-      let positiveMarks = correct * 2;
-      let negativeMarks = wrong * 0.5;
-      let finalMarks = positiveMarks - negativeMarks;
-      let totalMarksPossible = quizData.length * 2; // 100 Marks
-      let attempted = correct + wrong;
-      let accuracy = attempted > 0 ? ((correct / attempted) * 100).toFixed(1) : 0;
+        function renderQuestions() {
+            const container = document.getElementById('quiz-container');
+            container.innerHTML = '';
 
-      // Populate Result Dashboard
-      document.getElementById('res-score').innerText = `${finalMarks} / ${totalMarksPossible}`;
-      document.getElementById('res-accuracy').innerText = `Accuracy: ${accuracy}%`;
-      document.getElementById('res-correct').innerText = correct;
-      document.getElementById('res-wrong').innerText = wrong;
+            questionsData.forEach((q, index) => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.id = `q-card-${q.id}`;
+
+                let optionsHTML = '';
+                q.options.forEach((opt, optIdx) => {
+                    optionsHTML += `
+                        <button class="option-btn" id="opt-${q.id}-${optIdx}" onclick="selectOption(${q.id}, '${opt.replace(/'/g, "\'")}', ${optIdx})">
+                            ${String.fromCharCode(65 + optIdx)}. ${opt}
+                        </button>
+                    `;
+                });
+
+                card.innerHTML = `
+                    <div class="q-num">Question ${index + 1} of 50 (SSC CGL Pattern)</div>
+                    <div class="q-text">${q.question}</div>
+                    <div class="options-grid">
+                        ${optionsHTML}
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function selectOption(qId, selectedVal, optIdx) {
+            userAnswers[qId] = selectedVal;
+            
+            // Highlight selected button
+            const card = document.getElementById(`q-card-${qId}`);
+            const buttons = card.querySelectorAll('.option-btn');
+            buttons.forEach(btn => btn.classList.remove('selected'));
+            document.getElementById(`opt-${qId}-${optIdx}`).classList.add('selected');
+
+            // Update Progress
+            const answeredCount = Object.keys(userAnswers).length;
+            document.getElementById('progress-text').innerText = `Answered: ${answeredCount} / 50`;
+        }
+
+        function submitQuiz() {
+            if (!confirm("Kya aap Test Submit karna chahte hain?")) return;
+
+            clearInterval(timerInterval);
+            let correctCount = 0;
+            let incorrectCount = 0;
+
+            questionsData.forEach(q => {
+                const card = document.getElementById(`q-card-${q.id}`);
+                const buttons = card.querySelectorAll('.option-btn');
+                const userAns = userAnswers[q.id];
+
+                buttons.forEach((btn, idx) => {
+                    btn.disabled = true;
+                    const optText = q.options[idx];
+                    
+                    if (optText === q.answer) {
+                        btn.classList.add('correct');
+                    }
+                    if (userAns === optText && userAns !== q.answer) {
+                        btn.classList.add('incorrect');
+                    }
+                });
+
+                if (userAns === q.answer) {
+                    correctCount++;
+                } else if (userAns !== undefined) {
+                    incorrectCount++;
+                }
+            });
+
+            // SSC CGL Marking scheme (+2 for correct, -0.5 for wrong)
+            let marks = (correctCount * 2) - (incorrectCount * 0.5);
+            let totalMarks = 100;
+
+            document.getElementById('score-text').innerText = `${marks} / ${totalMarks} Marks`;
+            document.getElementById('time-taken-text').innerText = `Time Taken: ${document.getElementById('timer').innerText}`;
+            document.getElementById('stats-text').innerHTML = `
+                Correct: <b style="color:green">${correctCount}</b> | 
+                Incorrect: <b style="color:red">${incorrectCount}</b> | 
+                Unattempted: <b>${50 - (correctCount + incorrectCount)}</b>
+            `;
+
+            document.getElementById('result-modal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('result-modal').style.display = 'none';
+        }
+
+        window.onload = function() {
+            renderQuestions();
+            startTimer();
+        };
+    </script>
+</body>
+</html>
+= wrong;
       document.getElementById('res-negative').innerText = `-${negativeMarks}`;
       document.getElementById('res-unattempted').innerText = unattempted;
       document.getElementById('res-time').innerText = document.getElementById('timer').innerText;
